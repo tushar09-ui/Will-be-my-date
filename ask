@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>a little question 💗</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#fff5f7;
+  --paper2:#ffe1e8;
+  --ink:#4a1730;
+  --ink-soft:#713d55;
+  --rose:#e94f79;
+  --rose-deep:#c92f5d;
+  --blush:#ffc5d5;
+  --gold:#c17a3f;
+  --muted:#956b7c;
+}
+
+*{ box-sizing:border-box; }
+
+html,body{ width:100%; height:100%; margin:0; overflow-x:hidden; }
+
+body{
+  min-height:100dvh;
+  padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);
+  overflow:hidden;
+  -webkit-text-size-adjust:100%;
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(178,58,85,.06), transparent 40%),
+    radial-gradient(circle at 90% 85%, rgba(169,121,47,.08), transparent 45%),
+    var(--paper);
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(178,58,85,.06), transparent 40%),
+    radial-gradient(circle at 90% 85%, rgba(169,121,47,.08), transparent 45%),
+    repeating-linear-gradient(0deg, rgba(140,114,103,.035) 0px, rgba(140,114,103,.035) 1px, transparent 1px, transparent 3px),
+    var(--paper);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.app{
+  width:min(100%, 460px);
+  max-width:460px;
+  padding:clamp(14px, 4vw, 24px) clamp(12px, 5vw, 22px);
+  position:relative;
+  z-index:2;
+}
+
+/* progress: an ink underline that fills, not dots */
+.progress{
+  position:relative;
+  height:2px;
+  margin:6px 8px 30px;
+  background:rgba(140,114,103,.25);
+  border-radius:2px;
+}
+.progress i{
+  position:absolute; left:0; top:0; bottom:0;
+  width:8%;
+  background:var(--rose);
+  border-radius:2px;
+  transition:width .5s cubic-bezier(.2,.8,.2,1);
+}
+.progress[data-step="2"] i{ width:52%; }
+.progress[data-step="3"] i{ width:100%; }
+
+.step{ display:none; }
+.step.is-active{ display:block; animation:enter .5s cubic-bezier(.2,.8,.2,1); }
+
+@keyframes enter{
+  from{ opacity:0; transform:translateY(10px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+/* card: deckle / torn paper edge, wax seal overlap */
+.card{
+  position:relative;
+  text-align:center;
+  padding:clamp(62px, 12vw, 100px) clamp(18px, 8vw, 50px) clamp(30px, 8vw, 50px);
+  background:var(--paper2);
+  border:1px solid rgba(55,32,47,.1);
+  clip-path: polygon(
+    0% 1%, 4% 0%, 9% 1.2%, 14% 0%, 19% 1%, 24% 0.2%, 29% 1.1%, 34% 0%, 39% 1%, 44% 0.3%,
+    49% 1%, 54% 0%, 59% 1.1%, 64% 0.2%, 69% 1%, 74% 0%, 79% 1.2%, 84% 0%, 89% 1%, 94% 0.2%, 100% 1%,
+    100% 99%, 96% 100%, 91% 98.8%, 86% 100%, 81% 99%, 76% 99.8%, 71% 99%, 66% 100%, 61% 99%, 56% 99.7%,
+    51% 99%, 46% 100%, 41% 98.9%, 36% 99.8%, 31% 99%, 26% 100%, 21% 98.8%, 16% 100%, 11% 99%, 6% 99.8%, 0% 99%
+  );
+  box-shadow: 0 24px 60px rgba(55,32,47,.16);
+}
+
+
+
+.eyebrow{
+  margin-bottom:6px;
+  color:var(--gold);
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.04em;
+}
+
+h1{
+  margin:6px 0 10px;
+  font-family:'Fraunces',serif;
+  font-style:italic;
+  font-weight:600;
+  font-size:clamp(1.9rem,8vw,2.5rem);
+  line-height:1.12;
+  color:var(--ink);
+}
+
+.sub{
+  margin:0 0 28px;
+  color:var(--muted);
+  font-size:.92rem;
+  line-height:1.55;
+  max-width:280px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.btn-row{
+  position:relative;
+  width:100%;
+  height:155px;
+  margin-top:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+#yes{
+  position:absolute;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  z-index:5;
+  min-width:145px;
+}
+
+#no,
+.no-recreated{
+  position:relative;
+  z-index:6;
+  min-width:120px;
+  min-height:46px;
+  white-space:nowrap;
+  color:var(--ink);
+  background:#fff8fa;
+  border:1.5px solid rgba(201,47,93,.38);
+  box-shadow:0 5px 14px rgba(121,35,70,.12);
+}
+
+#no.is-moving,
+.no-recreated.is-moving{
+  position:absolute;
+  margin:0;
+  transform:none;
+}
+
+button{
+  border:0;
+  border-radius:3px;
+  padding:13px 20px;
+  min-height:44px;
+  font-family:'Inter',sans-serif;
+  font-size:.94rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+
+#yes, #confirm{
+  color:var(--paper);
+  background:var(--ink);
+  box-shadow:0 8px 20px rgba(55,32,47,.25);
+}
+#yes:hover, #confirm:not(:disabled):hover{
+  transform:translateY(-2px);
+  background:var(--rose-deep);
+}
+#yes:active, #confirm:not(:disabled):active{ transform:scale(.97); }
+
+#no:hover,
+.no-recreated:hover{
+  background:#fff8fa;
+  color:var(--ink);
+}
+
+@media (hover:none){
+  #yes:hover, #confirm:not(:disabled):hover, #no:hover, .link-btn:hover, .day-btn:hover{
+    transform:none;
+  }
+}
+
+#confirm{ width:100%; margin-top:18px; }
+#confirm:disabled{ opacity:.3; cursor:not-allowed; box-shadow:none; }
+
+.link-btn{
+  width:100%;
+  display:block;
+  margin-top:9px;
+  padding:9px;
+  background:transparent;
+  color:var(--muted);
+  font-size:.85rem;
+  font-weight:500;
+  text-decoration:underline;
+  text-decoration-color:rgba(140,114,103,.4);
+  text-underline-offset:3px;
+}
+.link-btn:hover{ color:var(--ink); }
+
+.back{
+  position:absolute;
+  top:20px; left:20px;
+  padding:5px 7px;
+  background:transparent;
+  color:var(--muted);
+  font-size:.8rem;
+  font-weight:500;
+}
+
+/* day grid: RSVP-stub styling */
+.day-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-bottom:14px;
+}
+
+.day-btn{
+  padding:13px 8px;
+  border-radius:3px;
+  color:var(--ink);
+  background:var(--paper);
+  border:1px dashed rgba(55,32,47,.3);
+}
+.day-btn:hover{ border-color:var(--rose); background:rgba(178,58,85,.05); }
+
+.day-btn .d{ display:block; font-family:'Fraunces',serif; font-size:1.05rem; font-weight:600; }
+.day-btn .m{ display:block; margin-top:2px; color:var(--muted); font-size:.74rem; }
+
+.day-btn[aria-checked="true"]{
+  border:1px solid var(--rose);
+  background:rgba(178,58,85,.08);
+  box-shadow:0 4px 14px rgba(178,58,85,.12);
+}
+
+.custom-row{ display:flex; gap:9px; margin:6px 0 16px; }
+.custom-row label{
+  flex:1; display:flex; flex-direction:column; gap:5px;
+  text-align:left; color:var(--muted); font-size:.75rem;
+}
+.custom-row input{
+  width:100%; padding:9px;
+  border:1px solid rgba(55,32,47,.25);
+  border-radius:3px;
+  color:var(--ink);
+  background:var(--paper);
+  font-family:'Inter',sans-serif;
+  font-size:.86rem;
+}
+.custom-row input:focus{ outline:2px solid var(--rose); outline-offset:2px; }
+
+#s-done .card{ padding-top:44px; padding-bottom:36px; }
+
+#summary{
+  max-width:270px;
+  margin:0 auto 16px;
+  color:var(--ink);
+  font-size:.96rem;
+  line-height:1.6;
+}
+
+#stage{ position:fixed; inset:0; z-index:1; pointer-events:none; }
+
+.fly-heart{
+  position:absolute;
+  font-size:1.2rem;
+  opacity:0;
+  color:var(--rose);
+  animation:rise 2.4s cubic-bezier(.2,.7,.3,1) forwards;
+}
+@keyframes rise{
+  0%{ opacity:0; transform:translateY(20px) scale(.6) rotate(-8deg); }
+  15%{ opacity:1; }
+  100%{ opacity:0; transform:translateY(-190px) scale(1.1) rotate(10deg); }
+}
+
+button:focus-visible{ outline:2px solid var(--rose); outline-offset:3px; }
+
+@media(max-width:520px){
+  .btn-row{
+    height:170px;
+  }
+
+  #yes{
+    min-width:150px;
+    bottom:14px;
+  }
+
+  #no,
+  .no-recreated{
+    min-width:120px;
+    max-width:145px;
+  }
+
+  .app{ padding:14px 12px; }
+  .card{ padding:58px 18px 30px; }
+  .sub{ font-size:.88rem; margin-bottom:22px; }
+  .btn-row{ gap:10px; }
+  button{ padding:12px 16px; min-height:46px; }
+  #yes, #no{ flex:1 1 120px; max-width:180px; }
+  .day-grid{ gap:8px; }
+  .day-btn{ min-height:62px; }
+  .custom-row{ flex-direction:column; }
+}
+
+@media(max-width:380px){
+  .card{ padding:50px 14px 26px; }
+  h1{ font-size:1.7rem; }
+  #yes, #no{ max-width:none; width:100%; }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .fly-heart, .step.is-active{ animation:none; }
+  button, .day-btn, .progress i{ transition:none; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="love-bg" aria-hidden="true">
+  <span>♡</span><span>♥</span><span>♡</span><span>♥</span><span>♡</span><span>♥</span>
+</div>
+<div id="stage" aria-hidden="true"></div>
+
+<div class="app">
+
+  <div class="progress" id="progress" data-step="1"><i></i></div>
+
+  <!-- STEP 1 -->
+  <section class="step is-active" id="s-ask">
+    <div class="card">
+      <div class="seal"></div>
+      <div class="eyebrow">a little question</div>
+      <h1>will you go out with me?</h1>
+      <p class="sub">no pressure. okay, a little pressure.</p>
+      <div class="btn-row">
+        <button id="yes">yes, obviously</button>
+        <button id="no">no</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step" id="s-when" inert>
+    <div class="card">
+      <button class="back" id="back1">← back</button>
+      <div class="eyebrow">okay, important question</div>
+      <h1>when are you free?</h1>
+      <p class="sub">pick a day, or make your own.</p>
+
+      <div class="day-grid" id="dayGrid" role="radiogroup" aria-label="Choose a day"></div>
+
+      <button class="link-btn" id="toggleCustom">or pick an exact date &amp; time</button>
+
+      <div class="custom-row" id="customRow" hidden>
+        <label>date <input type="date" id="customDate"></label>
+        <label>time <input type="time" id="customTime" value="19:00"></label>
+      </div>
+
+      <button id="confirm" disabled>confirm 💗</button>
+      <button class="link-btn" id="surprise">surprise me</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step" id="s-done" inert>
+    <div class="card">
+      <div class="seal"></div>
+      <div class="eyebrow">officially official</div>
+      <h1>it's a date!</h1>
+      <p class="sub" id="summary"></p>
+      <button id="restart" class="link-btn">plan a different one</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const stage = document.getElementById('stage');
+const sAsk = document.getElementById('s-ask');
+const sWhen = document.getElementById('s-when');
+const sDone = document.getElementById('s-done');
+const progress = document.getElementById('progress');
+
+const yesBtn = document.getElementById('yes');
+let noBtn = document.getElementById('no');
+const dayGrid = document.getElementById('dayGrid');
+const toggleCustom = document.getElementById('toggleCustom');
+const customRow = document.getElementById('customRow');
+const customDate = document.getElementById('customDate');
+const customTime = document.getElementById('customTime');
+const confirmBtn = document.getElementById('confirm');
+const surpriseBtn = document.getElementById('surprise');
+const backBtn = document.getElementById('back1');
+const summary = document.getElementById('summary');
+const restartBtn = document.getElementById('restart');
+
+function showStep(step, num){
+  [sAsk,sWhen,sDone].forEach(section=>{
+    const active = section === step;
+    section.classList.toggle('is-active',active);
+    active ? section.removeAttribute('inert') : section.setAttribute('inert','');
+  });
+  progress.dataset.step = num;
+}
+
+const teases = [
+  "are you sure? 💗",
+  "think again 🥺",
+  "not so fast 💕",
+  "one more chance 💖",
+  "okay... 😭"
+];
+
+let noClicks = 0;
+const MAX_NO_CLICKS = 5;
+
+function moveNoButton(){
+
+  if(noClicks >= MAX_NO_CLICKS) return;
+
+  noClicks++;
+
+  const area = document.querySelector('.btn-row');
+
+  // Safe positions INSIDE the card.
+  // These are intentionally away from the Yes button.
+  const positions = [
+    { left:'8px',  top:'8px' },
+    { right:'8px', top:'8px' },
+    { left:'8px',  bottom:'8px' },
+    { right:'8px', bottom:'8px' },
+    { left:'50%', top:'8px', center:true }
+  ];
+
+  const pos = positions[noClicks - 1];
+
+  noBtn.classList.add('is-moving');
+
+  // Clear old position values.
+  noBtn.style.left = '';
+  noBtn.style.right = '';
+  noBtn.style.top = '';
+  noBtn.style.bottom = '';
+  noBtn.style.transform = 'none';
+
+  if(pos.left !== undefined){
+    noBtn.style.left = pos.left;
+  }
+
+  if(pos.right !== undefined){
+    noBtn.style.right = pos.right;
+  }
+
+  if(pos.top !== undefined){
+    noBtn.style.top = pos.top;
+  }
+
+  if(pos.bottom !== undefined){
+    noBtn.style.bottom = pos.bottom;
+  }
+
+  if(pos.center){
+    noBtn.style.transform = 'translateX(-50%)';
+  }
+
+  noBtn.textContent = teases[noClicks - 1];
+
+  // On the fifth click, remove No.
+  if(noClicks === MAX_NO_CLICKS){
+
+    setTimeout(()=>{
+
+      noBtn.style.transition =
+        'opacity .35s ease, transform .35s ease';
+
+      noBtn.style.opacity = '0';
+      noBtn.style.transform =
+        pos.center
+          ? 'translateX(-50%) scale(.5)'
+          : 'scale(.5)';
+
+      setTimeout(()=>{
+
+        if(noBtn && noBtn.parentNode){
+          noBtn.remove();
+        }
+
+      },350);
+
+    },120);
+  }
+}
+
+// IMPORTANT:
+// No does NOT move on hover.
+// One click/tap = one movement.
+noBtn.addEventListener('pointerup', e => {
+  e.preventDefault();
+  moveNoButton();
+});
+
+// No hover does nothing. It moves only after click/tap.
+noBtn.addEventListener('pointerup',e=>{
+  e.preventDefault();
+  moveNoButton();
+});
+
+const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+let chosenDate = null;
+let selectedBtn = null;
+
+function buildDayGrid(){
+  dayGrid.innerHTML = '';
+  const today = new Date();
+  today.setHours(19,0,0,0);
+  for(let i=0;i<6;i++){
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'day-btn';
+    btn.setAttribute('role','radio');
+    btn.setAttribute('aria-checked','false');
+    const label = i===0 ? 'Today' : i===1 ? 'Tomorrow' : DAY_NAMES[d.getDay()];
+    btn.innerHTML = `<span class="d">${label}</span><span class="m">${MONTH_NAMES[d.getMonth()]} ${d.getDate()}</span>`;
+    btn.addEventListener('click', ()=> selectDay(d, btn));
+    dayGrid.appendChild(btn);
+  }
+}
+
+function selectDay(date, btn){
+  chosenDate = new Date(date);
+  if(selectedBtn) selectedBtn.setAttribute('aria-checked','false');
+  selectedBtn = btn;
+  btn.setAttribute('aria-checked','true');
+  customRow.hidden = true;
+  toggleCustom.textContent = 'or pick an exact date & time';
+  customDate.value = '';
+  confirmBtn.disabled = false;
+}
+
+toggleCustom.addEventListener('click', ()=>{
+  customRow.hidden = !customRow.hidden;
+  toggleCustom.textContent = customRow.hidden ? 'or pick an exact date & time' : 'hide custom date';
+  if(!customRow.hidden){
+    if(selectedBtn) selectedBtn.setAttribute('aria-checked','false');
+    selectedBtn = null;
+    const now = new Date();
+    const iso = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,10);
+    customDate.min = iso;
+    syncCustomToChosen();
+  }
+});
+
+function syncCustomToChosen(){
+  if(!customDate.value){ confirmBtn.disabled = true; return; }
+  const [y,m,d] = customDate.value.split('-').map(Number);
+  const [hh,mm] = (customTime.value || '19:00').split(':').map(Number);
+  chosenDate = new Date(y,m-1,d,hh,mm);
+  confirmBtn.disabled = false;
+}
+customDate.addEventListener('change', syncCustomToChosen);
+customTime.addEventListener('change', syncCustomToChosen);
+
+surpriseBtn.addEventListener('click', ()=>{
+  const buttons = Array.from(dayGrid.children);
+  const pick = buttons[Math.floor(Math.random()*buttons.length)];
+  const today = new Date();
+  today.setHours(19,0,0,0);
+  const index = buttons.indexOf(pick);
+  const d = new Date(today);
+  d.setDate(today.getDate()+index);
+  selectDay(d, pick);
+  pick.scrollIntoView({block:'nearest'});
+});
+
+backBtn.addEventListener('click', ()=> showStep(sAsk, 1));
+
+function burstHearts(){
+  const hearts = ['💗','💕','💖','✨','💞'];
+  for(let i=0;i<14;i++){
+    const heart = document.createElement('span');
+    heart.className = 'fly-heart';
+    heart.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+    heart.style.left = Math.random()*100 + 'vw';
+    heart.style.bottom = (5 + Math.random()*12) + 'vh';
+    heart.style.animationDelay = Math.random()*.4 + 's';
+    stage.appendChild(heart);
+    setTimeout(()=> heart.remove(), 2600);
+  }
+}
+
+yesBtn.addEventListener('click', ()=>{
+  buildDayGrid();
+  showStep(sWhen, 2);
+});
+
+confirmBtn.addEventListener('click', ()=>{
+  if(!chosenDate) return;
+  const dateStr = `${DAY_NAMES[chosenDate.getDay()]}, ${MONTH_NAMES[chosenDate.getMonth()]} ${chosenDate.getDate()}`;
+  const timeStr = chosenDate.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+  summary.textContent = `${dateStr} at ${timeStr}. can't wait. 💗`;
+  try{ localStorage.setItem('askout_last_plan', chosenDate.toISOString()); }catch(e){}
+  showStep(sDone, 3);
+  burstHearts();
+  const loop = setInterval(burstHearts, 900);
+  restartBtn.dataset.loopId = loop;
+});
+
+restartBtn.addEventListener('click', ()=>{
+  clearInterval(Number(restartBtn.dataset.loopId));
+  dodges = 0;
+  chosenDate = null;
+  selectedBtn = null;
+  yesBtn.style.transform = 'scale(1)';
+  if(!document.getElementById('no')){
+    const newNo=document.createElement('button');
+    newNo.id='no';
+    newNo.type='button';
+    newNo.textContent='no';
+    newNo.className = '';
+    newNo.style.position = 'relative';
+    newNo.style.left = '';
+    newNo.style.right = '';
+    newNo.style.top = '';
+    newNo.style.bottom = '';
+    newNo.style.transform = '';
+    document.querySelector('.btn-row').appendChild(newNo);
+    noBtn=newNo;
+
+    noBtn.addEventListener('pointerup',e=>{
+      e.preventDefault();
+      moveNoButton();
+    });
+  }
+
+  noBtn.style.position='';
+  noBtn.style.left='';
+  noBtn.style.top='';
+  noBtn.style.opacity='1';
+  noBtn.style.transform='';
+  noBtn.style.transition='';
+  noBtn.style.zIndex='';
+  noBtn.textContent='no';
+  noClicks=0;
+  confirmBtn.disabled=true;
+  customRow.hidden = true;
+  toggleCustom.textContent = 'or pick an exact date & time';
+  showStep(sAsk, 1);
+});
+</script>
+
+</body>
+</html>
